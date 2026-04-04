@@ -1,0 +1,49 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  background: radial-gradient(circle at top, #f4f7ff, #e9eef5 40%, #dfe6ee 100%);
+  color: #0f172a;
+  font-family: var(--font-optimistic);
+}
+
+.card {
+  width: min(520px, 100%);
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 36px 32px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #475569;
+}
+
+.widget {
+  display: flex;
+  justify-content: center;
+}
+
+.note {
+  font-size: 14px;
+  color: #2563eb;
+}
+
+.error {
+  font-size: 14px;
+  color: #dc2626;
+}

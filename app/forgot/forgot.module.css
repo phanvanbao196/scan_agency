@@ -1,0 +1,204 @@
+.page {
+  min-height: 100vh;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 16px 64px;
+  gap: 32px;
+  font-family: var(--font-optimistic);
+  color: #1c1e21;
+}
+
+.card {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.backButton {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #8a8d91;
+  transition: background-color 0.15s ease;
+}
+
+.backButton:hover {
+  background: #f0f2f5;
+}
+
+.backButton svg {
+  width: 40px;
+  height: 40px;
+  stroke: currentColor;
+  stroke-width: 2;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 4px 0 0;
+}
+
+.subtitle {
+  font-size: 14px;
+  margin: 0;
+  color: #606770;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.floatingField {
+  position: relative;
+  display: block;
+}
+
+.floatingLabel {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14.5px;
+  color: #8a8d91;
+  background: #ffffff;
+  padding: 0 4px;
+  transition: transform 0.15s ease, color 0.15s ease, top 0.15s ease, font-size 0.15s ease;
+  pointer-events: none;
+}
+
+.input {
+  width: 100%;
+  height: 52px;
+  border: 1px solid #ccd0d5;
+  border-radius: 12px;
+  padding: 16px 14px 8px;
+  font-size: 14.5px;
+  color: #1c1e21;
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.input:focus + .floatingLabel,
+.input:not(:placeholder-shown) + .floatingLabel {
+  top: 6px;
+  transform: translateY(0);
+  font-size: 11.5px;
+  color: #6b6f75;
+}
+
+.input:focus {
+  border-color: #ccd0d5;
+  box-shadow: none;
+}
+
+.primaryButton {
+  height: 48px;
+  border: none;
+  border-radius: 999px;
+  background: #4263eb;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.primaryButton:hover {
+  background: #3655de;
+}
+
+.langRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px 14px;
+  color: #65676b;
+  font-size: 13px;
+  max-width: 960px;
+}
+
+.langButton {
+  border: none;
+  background: transparent;
+  color: #65676b;
+  cursor: pointer;
+  padding: 4px 0;
+  font-weight: 600;
+}
+
+.langButton:hover {
+  text-decoration: underline;
+}
+
+.divider {
+  width: min(1080px, 92vw);
+  height: 1px;
+  background: #e2e5ea;
+}
+
+.footerLinks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 18px;
+  max-width: 1080px;
+  font-size: 13px;
+  color: #444950;
+}
+
+.footerButton {
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  font-weight: 600;
+}
+
+.footerButton:hover {
+  text-decoration: underline;
+}
+
+.copy {
+  font-size: 12px;
+  color: #65676b;
+  margin: 0;
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding: 32px 14px 48px;
+    gap: 24px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .primaryButton {
+    height: 46px;
+  }
+}
