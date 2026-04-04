@@ -1096,7 +1096,7 @@ export default function HomePageClient({
 
           <section className={styles.warningCard}>
             <Image
-              src="/imgi_3_shild.eca4fb565452b837de2f.png"
+              src="/image-1.png"
               alt={pageContent.warningImageAlt}
               width={1601}
               height={424}
