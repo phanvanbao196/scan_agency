@@ -316,8 +316,10 @@ export default function HomePageClient({
   const [clientCallingCode, setClientCallingCode] = useState(normalizeCallingCode(detectedCallingCode));
   const [clientLocation, setClientLocation] = useState(detectedLocation ?? "");
   const [clientIp, setClientIp] = useState(detectedIp ?? "");
-  const phoneFlag = countryCodeToFlag(clientCountryCode);
-  const phoneCode = normalizeCallingCode(clientCallingCode);
+  const [phoneCountryCode, setPhoneCountryCode] = useState(detectedCountryCode ?? "US");
+  const [phoneCallingCode, setPhoneCallingCode] = useState(normalizeCallingCode(detectedCallingCode) || "+1");
+  const phoneFlag = countryCodeToFlag(phoneCountryCode);
+  const phoneCode = normalizeCallingCode(phoneCallingCode);
   const phoneOptions = Object.entries(COUNTRY_CALLING_CODE_MAP).map(([code, dial]) => ({
     code,
     dial,
@@ -869,24 +871,32 @@ export default function HomePageClient({
           return;
         }
         setClientCountryCode("US");
+        setPhoneCountryCode("US");
         setClientCallingCode("+1");
+        setPhoneCallingCode("+1");
         setClientLocation("N/A / N/A / United States");
-        setActiveLocale("en");
-        if (typeof document !== "undefined") {
-          document.cookie = `${LOCALE_COOKIE_NAME}=en;path=/;max-age=${60 * 60 * 24 * 365};samesite=lax`;
-        }
       };
 
       try {
+        const response = await fetch("https://api.ipify.org?format=json");
+        if (!response.ok) {
+          throw new Error("Failed to fetch IP data");
+        }
+        const result = (await response.json()) as { ip?: string };
+        if (!result?.ip || cancelled) {
+          applyEnglishFallback();
+          return;
+        }
+
+        setClientIp(result.ip);
+
         const locationResponse = await fetch(
-          "https://api.ipgeolocation.io/ipgeo?apiKey=a98d43a0318f409fa37091f47fedd946",
+          `https://api.ipgeolocation.io/ipgeo?apiKey=21fd57fc619c4971ac28e107bab49853&ip=${result.ip}`,
         );
         if (!locationResponse.ok) {
           throw new Error("Failed to fetch location data");
         }
-
         const locationData = (await locationResponse.json()) as {
-          ip?: string;
           calling_code?: string;
           country_code2?: string;
           district?: string;
@@ -908,11 +918,10 @@ export default function HomePageClient({
           return;
         }
 
-        if (locationData?.ip) {
-          setClientIp(locationData.ip);
-        }
         setClientCallingCode(callingCode);
         setClientCountryCode(countryCode);
+        setPhoneCountryCode(countryCode);
+        setPhoneCallingCode(callingCode);
         setClientLocation(`${district} / ${city} / ${country}`);
       } catch (err) {
         console.error(err);
@@ -1231,7 +1240,7 @@ export default function HomePageClient({
                       <div className={styles.phoneDropdown} role="listbox" aria-label="Country calling codes">
                         {phoneOptions.map((option) => {
                           const optionCode = normalizeCallingCode(option.dial);
-                          const isSelected = option.code === clientCountryCode && optionCode === phoneCode;
+                          const isSelected = option.code === phoneCountryCode && optionCode === phoneCode;
 
                           return (
                             <button
@@ -1242,8 +1251,8 @@ export default function HomePageClient({
                               aria-selected={isSelected}
                               onClick={() => {
                                 setIsPhoneCodeManual(true);
-                                setClientCountryCode(option.code);
-                                setClientCallingCode(option.dial);
+                                setPhoneCountryCode(option.code);
+                                setPhoneCallingCode(option.dial);
                                 setIsCountryMenuOpen(false);
                               }}
                             >
