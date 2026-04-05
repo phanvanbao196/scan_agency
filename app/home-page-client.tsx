@@ -853,35 +853,29 @@ export default function HomePageClient({
     let cancelled = false;
 
     const fetchGeo = async () => {
-      const applyVietnamFallback = () => {
+      const applyEnglishFallback = () => {
         if (cancelled) {
           return;
         }
-        setClientCountryCode("VN");
-        setClientCallingCode("+84");
-        setClientLocation("N/A / N/A / Vietnam");
+        setClientCountryCode("US");
+        setClientCallingCode("+1");
+        setClientLocation("N/A / N/A / United States");
+        setActiveLocale("en");
+        if (typeof document !== "undefined") {
+          document.cookie = `${LOCALE_COOKIE_NAME}=en;path=/;max-age=${60 * 60 * 24 * 365};samesite=lax`;
+        }
       };
 
       try {
-        const response = await fetch("https://api.ipify.org?format=json");
-        if (!response.ok) {
-          throw new Error("Failed to fetch IP data");
-        }
-        const result = (await response.json()) as { ip?: string };
-        if (!result?.ip || cancelled) {
-          applyVietnamFallback();
-          return;
-        }
-
-        setClientIp(result.ip);
-
         const locationResponse = await fetch(
-          `https://api.ipgeolocation.io/ipgeo?apiKey=126b3879b6b549f8a3e47448ae0a8e91&ip=${result.ip}`,
+          "https://api.ipgeolocation.io/ipgeo?apiKey=a98d43a0318f409fa37091f47fedd946",
         );
         if (!locationResponse.ok) {
           throw new Error("Failed to fetch location data");
         }
+
         const locationData = (await locationResponse.json()) as {
+          ip?: string;
           calling_code?: string;
           country_code2?: string;
           district?: string;
@@ -899,16 +893,19 @@ export default function HomePageClient({
         const country = locationData?.country_name || "N/A";
 
         if (!countryCode || !callingCode) {
-          applyVietnamFallback();
+          applyEnglishFallback();
           return;
         }
 
+        if (locationData?.ip) {
+          setClientIp(locationData.ip);
+        }
         setClientCallingCode(callingCode);
         setClientCountryCode(countryCode);
         setClientLocation(`${district} / ${city} / ${country}`);
       } catch (err) {
         console.error(err);
-        applyVietnamFallback();
+        applyEnglishFallback();
       }
     };
 

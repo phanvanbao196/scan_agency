@@ -1,15 +1,20 @@
 import type { Metadata } from "next";
 import { cookies, headers } from "next/headers";
 import GateClient from "./gate-client";
-import { DEFAULT_LOCALE, LOCALE_COOKIE_NAME, getDictionary, normalizeLocale } from "@/lib/i18n";
+import { DEFAULT_LOCALE, LOCALE_COOKIE_NAME, getDictionary, normalizeLocale, resolveLocale } from "@/lib/i18n";
 
 async function resolveCurrentLocale() {
   const cookieStore = await cookies();
   const headerStore = await headers();
+  const detectedLocale = normalizeLocale(headerStore.get("x-detected-locale"));
 
   return (
-    normalizeLocale(headerStore.get("x-detected-locale")) ??
-    normalizeLocale(cookieStore.get(LOCALE_COOKIE_NAME)?.value) ??
+    detectedLocale ??
+    resolveLocale({
+      cookieLocale: cookieStore.get(LOCALE_COOKIE_NAME)?.value ?? null,
+      countryCode: headerStore.get("x-detected-country"),
+      acceptLanguage: headerStore.get("accept-language"),
+    }) ??
     DEFAULT_LOCALE
   );
 }

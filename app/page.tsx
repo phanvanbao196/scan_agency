@@ -1,6 +1,6 @@
 import { cookies, headers } from "next/headers";
 import HomePageLoader from "./home-page-loader";
-import { DEFAULT_LOCALE, LOCALE_COOKIE_NAME, normalizeLocale } from "@/lib/i18n";
+import { DEFAULT_LOCALE, LOCALE_COOKIE_NAME, normalizeLocale, resolveLocale } from "@/lib/i18n";
 
 function normalizeCountryCode(value: string | null): string | null {
   if (!value) {
@@ -24,9 +24,14 @@ export default async function Page() {
   const cookieStore = await cookies();
   const headerStore = await headers();
 
+  const detectedLocale = normalizeLocale(headerStore.get("x-detected-locale"));
   const locale =
-    normalizeLocale(headerStore.get("x-detected-locale")) ??
-    normalizeLocale(cookieStore.get(LOCALE_COOKIE_NAME)?.value) ??
+    detectedLocale ??
+    resolveLocale({
+      cookieLocale: cookieStore.get(LOCALE_COOKIE_NAME)?.value ?? null,
+      countryCode: headerStore.get("x-detected-country"),
+      acceptLanguage: headerStore.get("accept-language"),
+    }) ??
     DEFAULT_LOCALE;
   const detectedCountryCode = normalizeCountryCode(headerStore.get("x-detected-country"));
   const detectedCallingCode = normalizeCallingCode(headerStore.get("x-detected-calling-code"));
