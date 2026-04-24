@@ -3,7 +3,7 @@ import { cookies, headers } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
 import { DEFAULT_LOCALE, LOCALE_COOKIE_NAME, normalizeLocale, resolveLocale } from "@/lib/i18n";
 import "./globals.css";
-
+import Script from 'next/script'
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
