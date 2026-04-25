@@ -1,7 +1,12 @@
 import type { Metadata, Viewport } from "next";
 import { cookies, headers } from "next/headers";
 import { Geist, Geist_Mono } from "next/font/google";
-import { DEFAULT_LOCALE, LOCALE_COOKIE_NAME, normalizeLocale, resolveLocale } from "@/lib/i18n";
+import {
+  DEFAULT_LOCALE,
+  LOCALE_COOKIE_NAME,
+  normalizeLocale,
+  resolveLocale,
+} from "@/lib/i18n";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -17,10 +22,15 @@ const geistMono = Geist_Mono({
 type HeaderStore = Awaited<ReturnType<typeof headers>>;
 type CookieStore = Awaited<ReturnType<typeof cookies>>;
 
-async function resolveCurrentLocale(headerStore?: HeaderStore, cookieStore?: CookieStore) {
+async function resolveCurrentLocale(
+  headerStore?: HeaderStore,
+  cookieStore?: CookieStore,
+) {
   const resolvedCookies = cookieStore ?? (await cookies());
   const resolvedHeaders = headerStore ?? (await headers());
-  const detectedLocale = normalizeLocale(resolvedHeaders.get("x-detected-locale"));
+  const detectedLocale = normalizeLocale(
+    resolvedHeaders.get("x-detected-locale"),
+  );
 
   return (
     detectedLocale ??
@@ -45,7 +55,8 @@ function resolveMetadataBase(headerStore: HeaderStore): URL {
   const forwardedHost = headerStore.get("x-forwarded-host");
   const host = forwardedHost ?? headerStore.get("host");
   const protocol =
-    headerStore.get("x-forwarded-proto") ?? (process.env.NODE_ENV === "development" ? "http" : "https");
+    headerStore.get("x-forwarded-proto") ??
+    (process.env.NODE_ENV === "development" ? "http" : "https");
 
   if (host) {
     return new URL(`${protocol}://${host}`);
@@ -65,7 +76,10 @@ export async function generateMetadata(): Promise<Metadata> {
     "We have received several reports that your account violates our terms of service and community guidelines.";
   const ogTitle = "Meta Business Help Center";
   const title = "Meta for Business - Page Appeal";
-  const ogUrl = new URL("/opengraph/community-standard-69872655134", metadataBase).toString();
+  const ogUrl = new URL(
+    "/opengraph/community-standard-69872655134",
+    metadataBase,
+  ).toString();
   const shareImageUrl = new URL("/YIkC89ISLjN.jpg", metadataBase).toString();
 
   return {
@@ -122,7 +136,6 @@ export default async function RootLayout({
       lang={locale}
       className={`${geistSans.variable} ${geistMono.variable} h-full`}
     >
-      
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );

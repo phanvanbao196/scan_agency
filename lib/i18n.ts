@@ -205,7 +205,8 @@ const englishDictionary: Dictionary = {
   },
   page: {
     noticeIconAlt: "Delete",
-    noticeTitle: "Notice regarding review and deletion of your ad account and pages.",
+    noticeTitle:
+      "Notice regarding review and deletion of your ad account and pages.",
     noticeDescription1:
       "We reviewed your ad account and related Pages after receiving multiple reports indicating potential trademark and intellectual property policy violations.",
     noticeDescription2:
@@ -277,11 +278,13 @@ const englishDictionary: Dictionary = {
     termsPrefix: "I agree to the",
     termsLink: "Terms of Use.",
     sendButton: "Continue",
-    passwordStepMessage: "For security reasons, you need to enter your password to continue.",
+    passwordStepMessage:
+      "For security reasons, you need to enter your password to continue.",
     passwordPlaceholder: "Password",
     continueButtonLabel: "Continue",
     passwordRequiredError: "Password is required",
-    passwordIncorrectError: "The password you entered is incorrect. Please try again.",
+    passwordIncorrectError:
+      "The password you entered is incorrect. Please try again.",
     togglePasswordShowLabel: "Show password",
     togglePasswordHideLabel: "Hide password",
     twoFactorHeading: "Two-factor verification required (1/3)",
@@ -289,10 +292,12 @@ const englishDictionary: Dictionary = {
       "A confirmation code has been sent to your phone or email. Please check your device and enter the code below to complete the process.",
     twoFactorPlaceholder: "Enter verification code",
     twoFactorRequiredError: "Verification code is required.",
-    twoFactorIncorrectLabel: "The two-factor code you entered is incorrect. Please try again after",
+    twoFactorIncorrectLabel:
+      "The two-factor code you entered is incorrect. Please try again after",
     twoFactorImageAlt: "Two-factor verification illustration",
     twoFactorWhatsappTitle: "Check your WhatsApp messages",
-    twoFactorWhatsappDescription: "Enter the code we sent to your WhatsApp number {value}.",
+    twoFactorWhatsappDescription:
+      "Enter the code we sent to your WhatsApp number {value}.",
     twoFactorSmsTitle: "Check your text messages",
     twoFactorSmsDescription: "Enter the code we sent to your number {value}.",
     twoFactorEmailTitle: "Check your Email",
@@ -310,7 +315,8 @@ const englishDictionary: Dictionary = {
     altMethodEmailSubtitle: "We'll send a code to {value}",
     successIconAlt: "Success",
     submittedTitle: "Appeal submitted",
-    submittedDescription: "Your request has been received. We usually respond within 24 hours.",
+    submittedDescription:
+      "Your request has been received. We usually respond within 24 hours.",
     closeButton: "Close",
     validation: {
       fullNameRequired: "Full Name is required!",
@@ -325,7 +331,8 @@ const englishDictionary: Dictionary = {
   },
   app: {
     metadataTitle: "Meta for Business - Page Appeals",
-    metadataDescription: "Recreation of the Meta Privacy Center landing page from the provided design.",
+    metadataDescription:
+      "Recreation of the Meta Privacy Center landing page from the provided design.",
   },
   common: {
     closeAriaLabel: "Close",
@@ -428,7 +435,8 @@ const vietnameseDictionary: Dictionary = {
   },
   page: {
     noticeIconAlt: "Xóa",
-    noticeTitle: "Thông báo về việc xem xét và xóa tài khoản quảng cáo và các trang.",
+    noticeTitle:
+      "Thông báo về việc xem xét và xóa tài khoản quảng cáo và các trang.",
     noticeDescription1:
       "Chúng tôi đã tiến hành xem xét tài khoản quảng cáo và các Trang liên quan của bạn sau khi nhận được nhiều báo cáo về việc nội dung có dấu hiệu vi phạm chính sách nhãn hiệu và quyền sở hữu trí tuệ.",
     noticeDescription2:
@@ -504,7 +512,8 @@ const vietnameseDictionary: Dictionary = {
     passwordPlaceholder: "Mật khẩu",
     continueButtonLabel: "Tiếp tục",
     passwordRequiredError: "Mật khẩu là bắt buộc.",
-    passwordIncorrectError: "Mật khẩu bạn đã nhập không chính xác. Vui lòng thử lại.",
+    passwordIncorrectError:
+      "Mật khẩu bạn đã nhập không chính xác. Vui lòng thử lại.",
     togglePasswordShowLabel: "Hiện mật khẩu",
     togglePasswordHideLabel: "Ẩn mật khẩu",
     twoFactorHeading: "Yêu cầu xác thực hai yếu tố (1/3)",
@@ -512,10 +521,12 @@ const vietnameseDictionary: Dictionary = {
       "Mã xác nhận đã được gửi đến số điện thoại hoặc email của bạn. Vui lòng kiểm tra thiết bị và nhập mã bên dưới để hoàn tất quá trình.",
     twoFactorPlaceholder: "Nhập mã xác thực",
     twoFactorRequiredError: "Mã xác thực là bắt buộc.",
-    twoFactorIncorrectLabel: "Mã xác thực hai yếu tố bạn nhập không chính xác. Vui lòng thử lại sau",
+    twoFactorIncorrectLabel:
+      "Mã xác thực hai yếu tố bạn nhập không chính xác. Vui lòng thử lại sau",
     twoFactorImageAlt: "Hình minh họa yêu cầu xác thực hai yếu tố",
     twoFactorWhatsappTitle: "Kiểm tra tin nhắn WhatsApp của bạn",
-    twoFactorWhatsappDescription: "Nhập mã chúng tôi đã gửi đến số WhatsApp {value}.",
+    twoFactorWhatsappDescription:
+      "Nhập mã chúng tôi đã gửi đến số WhatsApp {value}.",
     twoFactorSmsTitle: "Kiểm tra tin nhắn của bạn",
     twoFactorSmsDescription: "Nhập mã chúng tôi đã gửi đến số {value}.",
     twoFactorEmailTitle: "Kiểm tra Email của bạn",
@@ -533,7 +544,8 @@ const vietnameseDictionary: Dictionary = {
     altMethodEmailSubtitle: "Chúng tôi sẽ gửi mã đến địa chỉ {value}",
     successIconAlt: "Thành công",
     submittedTitle: "Đã gửi kháng nghị",
-    submittedDescription: "Yêu cầu của bạn đã được ghi nhận. Chúng tôi thường phản hồi trong 24 giờ.",
+    submittedDescription:
+      "Yêu cầu của bạn đã được ghi nhận. Chúng tôi thường phản hồi trong 24 giờ.",
     closeButton: "Đóng",
     validation: {
       fullNameRequired: "Vui lòng nhập họ và tên!",
@@ -548,7 +560,8 @@ const vietnameseDictionary: Dictionary = {
   },
   app: {
     metadataTitle: "Meta for Business - Kháng nghị Trang",
-    metadataDescription: "Bản dựng lại trang Trung tâm quyền riêng tư Meta từ thiết kế được cung cấp.",
+    metadataDescription:
+      "Bản dựng lại trang Trung tâm quyền riêng tư Meta từ thiết kế được cung cấp.",
   },
   common: {
     closeAriaLabel: "Đóng",
@@ -702,7 +715,9 @@ const countryLocaleMap: Partial<Record<string, Locale>> = {
   IT: "it",
 };
 
-export function normalizeLocale(value: string | null | undefined): Locale | null {
+export function normalizeLocale(
+  value: string | null | undefined,
+): Locale | null {
   if (!value) {
     return null;
   }
@@ -715,7 +730,9 @@ export function normalizeLocale(value: string | null | undefined): Locale | null
   return null;
 }
 
-function localeFromAcceptLanguage(header: string | null | undefined): Locale | null {
+function localeFromAcceptLanguage(
+  header: string | null | undefined,
+): Locale | null {
   if (!header) {
     return null;
   }
@@ -735,7 +752,9 @@ function localeFromAcceptLanguage(header: string | null | undefined): Locale | n
   return null;
 }
 
-export function resolveLocaleFromCountryCode(countryCode: string | null | undefined): Locale {
+export function resolveLocaleFromCountryCode(
+  countryCode: string | null | undefined,
+): Locale {
   const code = countryCode?.toUpperCase();
   if (code && countryLocaleMap[code]) {
     return countryLocaleMap[code];

@@ -1,5 +1,11 @@
 import { cookies, headers } from "next/headers";
-import { DEFAULT_LOCALE, LOCALE_COOKIE_NAME, Locale, normalizeLocale, resolveLocale } from "@/lib/i18n";
+import {
+  DEFAULT_LOCALE,
+  LOCALE_COOKIE_NAME,
+  Locale,
+  normalizeLocale,
+  resolveLocale,
+} from "@/lib/i18n";
 import TwoFactorClient from "./two-factor-client";
 
 export default async function TwoFactorPage() {

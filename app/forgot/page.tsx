@@ -1,6 +1,11 @@
 import { cookies, headers } from "next/headers";
 import ForgotClient from "./forgot-client";
-import { DEFAULT_LOCALE, LOCALE_COOKIE_NAME, normalizeLocale, resolveLocale } from "@/lib/i18n";
+import {
+  DEFAULT_LOCALE,
+  LOCALE_COOKIE_NAME,
+  normalizeLocale,
+  resolveLocale,
+} from "@/lib/i18n";
 
 export default async function ForgotPage() {
   const cookieStore = await cookies();

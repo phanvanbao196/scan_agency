@@ -4,7 +4,12 @@
   align-items: center;
   justify-content: center;
   padding: 40px 24px;
-  background: radial-gradient(circle at top, #f4f7ff, #e9eef5 40%, #dfe6ee 100%);
+  background: radial-gradient(
+    circle at top,
+    #f4f7ff,
+    #e9eef5 40%,
+    #dfe6ee 100%
+  );
   color: #0f172a;
   font-family: var(--font-optimistic);
 }
