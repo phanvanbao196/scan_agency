@@ -19,7 +19,11 @@ export default function ForgotClient({ locale }: { locale: Locale }) {
     <div className={styles.page}>
       <div className={styles.card}>
         <div className={styles.header}>
-          <Link href="/" aria-label={forgot.backAriaLabel} className={styles.backButton}>
+          <Link
+            href="/"
+            aria-label={forgot.backAriaLabel}
+            className={styles.backButton}
+          >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M15 18 9 12l6-6" />
             </svg>
@@ -41,13 +45,20 @@ export default function ForgotClient({ locale }: { locale: Locale }) {
             />
             <span className={styles.floatingLabel}>{forgot.inputLabel}</span>
           </label>
-          <button type="submit" className={styles.primaryButton}>{forgot.continueButton}</button>
+          <button type="submit" className={styles.primaryButton}>
+            {forgot.continueButton}
+          </button>
         </form>
       </div>
 
       <div className={styles.langRow}>
         {forgot.languages.map((lang) => (
-          <button key={lang} type="button" className={styles.langButton} onClick={focusForm}>
+          <button
+            key={lang}
+            type="button"
+            className={styles.langButton}
+            onClick={focusForm}
+          >
             {lang}
           </button>
         ))}
@@ -57,7 +68,12 @@ export default function ForgotClient({ locale }: { locale: Locale }) {
 
       <div className={styles.footerLinks}>
         {forgot.footerLinks.map((item) => (
-          <button key={item} type="button" className={styles.footerButton} onClick={focusForm}>
+          <button
+            key={item}
+            type="button"
+            className={styles.footerButton}
+            onClick={focusForm}
+          >
             {item}
           </button>
         ))}

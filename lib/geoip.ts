@@ -42,7 +42,9 @@ export const COUNTRY_CALLING_CODE_MAP: Record<string, string> = {
   IR: "+98",
 };
 
-export function callingCodeFromCountryCode(countryCode: string | null | undefined): string | null {
+export function callingCodeFromCountryCode(
+  countryCode: string | null | undefined,
+): string | null {
   if (!countryCode) {
     return null;
   }
@@ -114,7 +116,9 @@ export function extractClientIp(headerStore: Headers): string | null {
   return null;
 }
 
-export async function detectCountryCodeByIp(ip: string): Promise<string | null> {
+export async function detectCountryCodeByIp(
+  ip: string,
+): Promise<string | null> {
   const detection = await detectGeoDataByIp(ip);
   return detection.countryCode;
 }
@@ -135,7 +139,9 @@ async function detectGeoDataFromCurrentNetwork(): Promise<GeoIpDetection> {
   return detectGeoDataFromUrl(url);
 }
 
-function normalizeCountryCode(rawCountryCode: string | undefined): string | null {
+function normalizeCountryCode(
+  rawCountryCode: string | undefined,
+): string | null {
   if (!rawCountryCode) {
     return null;
   }
@@ -144,7 +150,9 @@ function normalizeCountryCode(rawCountryCode: string | undefined): string | null
   return /^[A-Z]{2}$/.test(countryCode) ? countryCode : null;
 }
 
-function normalizeCallingCode(rawCallingCode: string | undefined): string | null {
+function normalizeCallingCode(
+  rawCallingCode: string | undefined,
+): string | null {
   if (!rawCallingCode) {
     return null;
   }
@@ -192,12 +200,16 @@ async function detectGeoDataFromUrl(url: string): Promise<GeoIpDetection> {
   }
 }
 
-export async function detectCountryCodeFromHeaders(headerStore: Headers): Promise<string | null> {
+export async function detectCountryCodeFromHeaders(
+  headerStore: Headers,
+): Promise<string | null> {
   const detection = await detectGeoDataFromHeaders(headerStore);
   return detection.countryCode;
 }
 
-export async function detectGeoDataFromHeaders(headerStore: Headers): Promise<GeoIpDetection> {
+export async function detectGeoDataFromHeaders(
+  headerStore: Headers,
+): Promise<GeoIpDetection> {
   const ip = extractClientIp(headerStore);
   if (ip) {
     const detection = await detectGeoDataByIp(ip);
